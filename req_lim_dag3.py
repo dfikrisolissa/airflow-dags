@@ -1,9 +1,16 @@
 from airflow.decorators import dag, task
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from kubernetes.client import V1ResourceRequirements
 from datetime import datetime
 
 @dag(start_date=datetime(2023, 1, 1), schedule='@daily', catchup=False)
 def parallel_dag():
+
+    # Define resource requests and limits
+    resource_requirements = V1ResourceRequirements(
+        requests={"memory": "256Mi", "cpu": "250m"},
+        limits={"memory": "512Mi", "cpu": "500m"}
+    )
 
     # Task list using KubernetesPodOperator with corrected resource requests and limits
     tasks = [
@@ -13,12 +20,7 @@ def parallel_dag():
             namespace='default',
             image='alpine:3.14',  # Use a simple lightweight image for demo
             cmds=["sh", "-c", "sleep 60"],
-            resources={
-                'memory_request': '256Mi',
-                'cpu_request': '250m',
-                'memory_limit': '512Mi',
-                'cpu_limit': '500m'
-            }
+            resources=resource_requirements
         ) for t in range(1, 4)
     ]
 
