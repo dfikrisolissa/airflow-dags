@@ -5,7 +5,7 @@ from datetime import datetime
 @dag(start_date=datetime(2023, 1, 1), schedule='@daily', catchup=False)
 def parallel_dag():
 
-    # Task list using KubernetesPodOperator with resource requests and limits
+    # Task list using KubernetesPodOperator with corrected resource requests and limits
     tasks = [
         KubernetesPodOperator(
             task_id=f'task_{t}',
@@ -14,10 +14,10 @@ def parallel_dag():
             image='alpine:3.14',  # Use a simple lightweight image for demo
             cmds=["sh", "-c", "sleep 60"],
             resources={
-                'request_memory': '256Mi',
-                'request_cpu': '250m',
-                'limit_memory': '512Mi',
-                'limit_cpu': '500m'
+                'memory_request': '256Mi',
+                'cpu_request': '250m',
+                'memory_limit': '512Mi',
+                'cpu_limit': '500m'
             }
         ) for t in range(1, 4)
     ]
@@ -34,4 +34,3 @@ def parallel_dag():
     tasks >> task_5(task_4(42))
 
 parallel_dag = parallel_dag()
-
