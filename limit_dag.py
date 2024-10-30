@@ -14,8 +14,8 @@ def limit_dag():
                 "KubernetesExecutor": {
                     "request_cpu": "200m",
                     "limit_cpu": "400m",
-                    "request_memory": "128Mi",
-                    "limit_memory": "400Mi"
+                    "request_memory": "90Mi",
+                    "limit_memory": "100Mi"
                 }
             }
         ) for t in range(1, 4)
