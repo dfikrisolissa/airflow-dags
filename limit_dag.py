@@ -3,7 +3,7 @@ from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 @dag(start_date=datetime(2023, 1, 1), schedule_interval="*/2 * * * *", catchup=False)
-def parallel_dag():
+def limit_dag():
 
     # Define tasks with resource requests and limits
     tasks = [
@@ -33,4 +33,4 @@ def parallel_dag():
     # Set task dependencies
     tasks >> task_5(task_4(42))
 
-parallel_dag()
+limit_dag()
